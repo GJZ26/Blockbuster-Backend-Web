@@ -14,6 +14,14 @@ User.init({
         type: DataTypes.STRING,
         allowNull: false
     },
+    description: {
+        type: DataTypes.STRING,
+        allowNull: true
+    },
+    website: {
+        type: DataTypes.STRING,
+        allowNull: true
+    },
     email: {
         type: DataTypes.STRING,
         allowNull: false
@@ -24,11 +32,12 @@ User.init({
     },
     role: {
         type: DataTypes.ENUM(["viewer", "institution"]),
+        defaultValue: "viewer",
         allowNull: false
     },
     actor: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: true
     }
 },
     {
