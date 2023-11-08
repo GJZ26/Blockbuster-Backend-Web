@@ -2,6 +2,7 @@ import config from './app.conf.json' assert {type: 'json'}
 import express from 'express'
 import root_route from './routes/root.routes.js'
 import user_route from './routes/user.routes.js'
+import file_route from './routes/file.routes.js'
 import bodyParser from 'body-parser'
 import cors from 'cors'
 import dotenv from 'dotenv'
@@ -26,6 +27,7 @@ app.use(bodyParser.json({ limit: '10mb' }))
 // * * * * * * APP ROUTING * * * * * * 
 app.use(root_route)
 app.use('/user',user_route)
+app.use('/file',file_route)
 
 
 // * * * * * *  APP RUNNING * * * * * * 
