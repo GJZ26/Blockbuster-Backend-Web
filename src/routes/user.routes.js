@@ -4,6 +4,7 @@ import { Op } from 'sequelize'
 
 import User from '../models/user.model.js';
 
+const salt = parseInt(process.env["SALT_ROUNDS"]);
 const router = express.Router()
 
 // TODO: Get all Institution
@@ -59,7 +60,7 @@ router.post('/register', async (req, res) => {
     }
 
 
-    const encrypted_password = bcrypt.hashSync(body.password, 3)
+    const encrypted_password = bcrypt.hashSync(body.password, salt)
 
     const user_already_registered = await User.count({
         where: {
