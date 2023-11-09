@@ -13,7 +13,15 @@ File.init({
         type: DataTypes.DATEONLY,
         allowNull: false,
     },
-    
+    from: {
+        type: DataTypes.BIGINT,
+        allowNull: false
+    },
+    to: {
+        type: DataTypes.BIGINT,
+        allowNull: false
+    }
+
 },
     {
         timestamps: false,
