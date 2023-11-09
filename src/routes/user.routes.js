@@ -1,12 +1,12 @@
 import express from 'express';
 import bcrypt from 'bcrypt'
 import { Op } from 'sequelize'
+import jwt from 'jsonwebtoken'
 
 import User from '../models/user.model.js';
 
+const salt = parseInt(process.env["SALT_ROUNDS"]);
 const router = express.Router()
-
-// TODO: Get all Institution
 
 router.get('/', (req, res) => {
     res.send("User endpoint")
@@ -33,18 +33,25 @@ router.post('/login', async (req, res) => {
             ]
         }
     })
-    
+
     if (!user_selected) {
         return res.status(404).send("No se ha encontrado el usuario.");
     }
 
-    if(!bcrypt.compareSync(body.password, user_selected.dataValues.password)){
+    if (!bcrypt.compareSync(body.password, user_selected.dataValues.password)) {
         return res.status(403).send("Contraseña incorrecta");
     }
-    
 
 
-    res.status(200).send("Autenticacion exitosa")
+
+    res.status(200).send(jwt.sign(
+        {
+            username: user_selected.dataValues.username
+        }
+        ,
+        process.env["SECRET_TOKEN"],
+        { algorithm: 'HS256' }
+    ))
 })
 
 router.post('/register', async (req, res) => {
@@ -59,7 +66,7 @@ router.post('/register', async (req, res) => {
     }
 
 
-    const encrypted_password = bcrypt.hashSync(body.password, 3)
+    const encrypted_password = bcrypt.hashSync(body.password, salt)
 
     const user_already_registered = await User.count({
         where: {
@@ -90,7 +97,13 @@ router.post('/register', async (req, res) => {
     } catch (e) {
         return res.status(500).send("Ha ocurrido un error durante tu peticion.");
     }
-    return res.status(201).send("El usuario ha sido registrado con éxito");
+    return res.status(201).send(jwt.sign({
+        username: body.username
+    },
+        process.env["SECRET_TOKEN"],
+        {
+            algorithm: 'HS256'
+        }));
 })
 
 export default router;
