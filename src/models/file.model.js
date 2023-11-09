@@ -5,13 +5,12 @@ class File extends Model { }
 
 File.init({
     uuid: {
-        type: DataTypes.BIGINT,
+        type: DataTypes.STRING,
         primaryKey: true,
         allowNull: false,
-        autoIncrement: true
     },
     createDate: {
-        type: DataTypes.DATE,
+        type: DataTypes.DATEONLY,
         allowNull: false,
     },
     
