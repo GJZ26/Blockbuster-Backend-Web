@@ -1,5 +1,6 @@
 {
     "app_host": "localhost",
     "app_port": 8080,
-    "app_protocol":"http"
+    "app_protocol": "http",
+    "folder_storage": "files"
 }
