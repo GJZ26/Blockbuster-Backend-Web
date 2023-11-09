@@ -12,8 +12,39 @@ router.get('/', (req, res) => {
     res.send("User endpoint")
 })
 
-router.post('/login', (req, res) => {
-    res.send("Hola desde login").status(200);
+router.post('/login', async (req, res) => {
+    const body = req.body
+    if (
+        (!body.email && !body.username) ||
+        !body.password
+
+    ) {
+        return res.status(401).send("Por favor proporciones las credenciales necesarias");
+    }
+
+    const user_indentity = body.email || body.username;
+
+
+    const user_selected = await User.findOne({
+        where: {
+            [Op.or]: [
+                { username: user_indentity },
+                { email: user_indentity }
+            ]
+        }
+    })
+    
+    if (!user_selected) {
+        return res.status(404).send("No se ha encontrado el usuario.");
+    }
+
+    if(!bcrypt.compareSync(body.password, user_selected.dataValues.password)){
+        return res.status(403).send("Contraseña incorrecta");
+    }
+    
+
+
+    res.status(200).send("Autenticacion exitosa")
 })
 
 router.post('/register', async (req, res) => {
@@ -27,6 +58,7 @@ router.post('/register', async (req, res) => {
         return res.status(401).send("Favor de proporcionar algunos de los campos obligatorios: username, password, email");
     }
 
+
     const encrypted_password = bcrypt.hashSync(body.password, 3)
 
     const user_already_registered = await User.count({
@@ -37,7 +69,7 @@ router.post('/register', async (req, res) => {
             ]
         }
     })
-    
+
     if (user_already_registered > 0) {
         return res.status(409).send("Ya existe un usuario con el mismo username o correo")
     }
