@@ -41,17 +41,23 @@ router.post('/login', async (req, res) => {
     if (!bcrypt.compareSync(body.password, user_selected.dataValues.password)) {
         return res.status(403).send("Contraseña incorrecta");
     }
-
-
-
-    res.status(200).send(jwt.sign(
+    const token = jwt.sign(
         {
             username: user_selected.dataValues.username
         }
         ,
         process.env["SECRET_TOKEN"],
         { algorithm: 'HS256' }
-    ))
+    )
+
+    res.status(200).json({
+        id: user_selected.dataValues.id,
+        token: token,
+        username: body.username,
+        role: body.role || 'viewer'
+    })
+
+
 })
 
 router.post('/register', async (req, res) => {
@@ -97,13 +103,23 @@ router.post('/register', async (req, res) => {
     } catch (e) {
         return res.status(500).send("Ha ocurrido un error durante tu peticion.");
     }
-    return res.status(201).send(jwt.sign({
+    
+    const token=jwt.sign({
         username: body.username
     },
         process.env["SECRET_TOKEN"],
         {
             algorithm: 'HS256'
-        }));
+        });
+
+    return res.status(201).json({
+        id: new_user_or_institute.dataValues.id,
+        token: token,
+        username: body.username,
+        role: body.role || 'viewer'
+    });
+
+
 })
 
 export default router;
