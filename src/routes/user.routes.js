@@ -99,7 +99,7 @@ router.post('/register', async (req, res) => {
 
 
     try {
-        new_user_or_institute.save()
+        await new_user_or_institute.save()
     } catch (e) {
         return res.status(500).send("Ha ocurrido un error durante tu peticion.");
     }
@@ -118,7 +118,6 @@ router.post('/register', async (req, res) => {
         username: body.username,
         role: body.role || 'viewer'
     });
-
 
 })
 
