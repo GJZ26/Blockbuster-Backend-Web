@@ -107,7 +107,7 @@ router.post('/register', async (req, res) => {
     
     const token=jwt.sign({
         username: body.username,
-        id: user_selected.dataValues.id
+        id: new_user_or_institute.dataValues.id
     },
         process.env["SECRET_TOKEN"],
         {
