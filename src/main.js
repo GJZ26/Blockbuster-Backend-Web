@@ -15,7 +15,7 @@ const app = express('/test', root_route)
 dotenv.config()
 
 app.use(cors({ 
-    origin: ['http://localhost:3000'],
+    origin: '*',
     methods: ['POST', 'GET', 'PUT', 'DELETE'],
     credentials: true
 }))
