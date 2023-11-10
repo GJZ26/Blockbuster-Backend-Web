@@ -36,9 +36,23 @@ const upload = multer({ storage: storage, });
 
 // * * * * * * FILE ROUTES * * * * * * 
 
-router.get('/', (req, res) => {
-    res.send("file root")
+
+router.get('/',async (req, res) => {
+    const files_recovers = await File.findAll()
+
+    if(files_recovers.length === 0){
+        return res.status(404).send("No hay archivos por mostrar")
+    }
+
+    const result = [];
+
+    for(let i = 0; i < files_recovers.length; i++) {
+        result.push(files_recovers[i].dataValues)
+    }
+    
+    res.json(result)
 })
+
 
 router.get('/:name', async (req, res) => {
     const token_info = validate_token(req.headers.authorization.replace("Bearer ", ""))

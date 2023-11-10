@@ -43,7 +43,8 @@ router.post('/login', async (req, res) => {
     }
     const token = jwt.sign(
         {
-            username: user_selected.dataValues.username
+            username: user_selected.dataValues.username,
+            id: user_selected.dataValues.id
         }
         ,
         process.env["SECRET_TOKEN"],
@@ -105,7 +106,8 @@ router.post('/register', async (req, res) => {
     }
     
     const token=jwt.sign({
-        username: body.username
+        username: body.username,
+        id: user_selected.dataValues.id
     },
         process.env["SECRET_TOKEN"],
         {
